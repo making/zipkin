@@ -18,6 +18,7 @@ Property | Environment Variable | Description
 `zipkin.collector.rabbitmq.username` | `RABBIT_USER` | Username to use when connecting to RabbitMQ. Defaults to `guest`
 `zipkin.collector.rabbitmq.virtual-host` | `RABBIT_VIRTUAL_HOST` | RabbitMQ virtual host to use. Defaults to `/`
 `zipkin.collector.rabbitmq.use-ssl` | `RABBIT_USE_SSL` | Set to `true` to use SSL when connecting to RabbitMQ
+`zipkin.collector.rabbitmq.use-nio` | `RABBIT_USE_NIO` | Set to `true` to enable [non-blocking IO mode](https://www.rabbitmq.com/api-guide.html#java-nio). Defaults to `false`
 
 ### Caveats
 

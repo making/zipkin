@@ -13,11 +13,14 @@
  */
 package zipkin.collector.rabbitmq;
 
+import java.lang.reflect.Field;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
+
+import com.rabbitmq.client.ConnectionFactory;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +29,7 @@ import org.springframework.boot.autoconfigure.context.PropertyPlaceholderAutoCon
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.ReflectionUtils;
 import zipkin.autoconfigure.collector.rabbitmq.ZipkinRabbitMQCollectorProperties;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -75,7 +79,15 @@ public class ZipkinRabbitMQCollectorPropertiesOverrideTest {
             builder -> builder.connectionFactory.getVirtualHost()),
         parameters("useSsl", true,
           ZipkinRabbitMQCollectorProperties::getUseSsl,
-          builder -> builder.connectionFactory.isSSL())
+          builder -> builder.connectionFactory.isSSL()),
+        parameters("useNio", true,
+          ZipkinRabbitMQCollectorProperties::getUseNio,
+          builder -> {
+            // There is no getter for nio in ConnectionFactory
+            Field nio = ReflectionUtils.findField(ConnectionFactory.class, "nio");
+            ReflectionUtils.makeAccessible(nio);
+            return ReflectionUtils.getField(nio, builder.connectionFactory);
+          })
     );
   }
 

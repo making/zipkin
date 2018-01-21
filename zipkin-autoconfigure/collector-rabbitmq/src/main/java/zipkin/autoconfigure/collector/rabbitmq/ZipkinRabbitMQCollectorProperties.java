@@ -42,6 +42,8 @@ public class ZipkinRabbitMQCollectorProperties {
   private String virtualHost;
   /** Flag to use SSL */
   private Boolean useSsl;
+  /** Flag to use NIO */
+  private Boolean useNio;
 
   public List<String> getAddresses() {
     return addresses;
@@ -107,6 +109,14 @@ public class ZipkinRabbitMQCollectorProperties {
     this.useSsl = useSsl;
   }
 
+  public Boolean getUseNio() {
+    return useNio;
+  }
+
+  public void setUseNio(Boolean useNio) {
+    this.useNio = useNio;
+  }
+
   public RabbitMQCollector.Builder toBuilder()
     throws KeyManagementException, NoSuchAlgorithmException {
     final RabbitMQCollector.Builder result = RabbitMQCollector.builder();
@@ -119,6 +129,7 @@ public class ZipkinRabbitMQCollectorProperties {
     if (username != null) connectionFactory.setUsername(username);
     if (virtualHost != null) connectionFactory.setVirtualHost(virtualHost);
     if (useSsl != null && useSsl) connectionFactory.useSslProtocol();
+    if (useNio != null && useNio) connectionFactory.useNio();
     result.connectionFactory(connectionFactory);
     return result;
   }
